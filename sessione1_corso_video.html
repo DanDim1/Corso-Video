@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sessione 1 — Fondamenta e Ripresa Consapevole</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --dark: #111111;
+    --mid: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #7a7570;
+    --accent: #c8a96e;
+    --accent2: #e8e4dc;
+    --white: #f5f2ed;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+  }
+
+  /* MOBILE: allow scroll within slide */
+  @media (max-width: 768px) {
+    html, body { overflow: hidden; }
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* SLIDES CONTAINER */
+  .slides-wrapper {
+    width: 100vw; height: 100vh;
+    position: relative; overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.7s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: all;
+  }
+
+  /* NAVIGATION */
+  .nav {
+    position: fixed; bottom: 40px; right: 50px;
+    display: flex; align-items: center; gap: 20px;
+    z-index: 100;
+  }
+  .nav-btn {
+    width: 56px; height: 56px;
+    border: 1px solid var(--border);
+    background: rgba(8,8,8,0.8);
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+    font-family: 'DM Mono', monospace;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ========================
+     MOBILE RESPONSIVE
+  ======================== */
+  @media (max-width: 768px) {
+
+    /* NAV — bottom center, above content */
+    .nav {
+      bottom: 16px; right: 50%;
+      transform: translateX(50%);
+      gap: 16px;
+      background: rgba(8,8,8,0.9);
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+    }
+    .nav-btn { width: 48px; height: 48px; font-size: 18px; }
+    .session-label { display: none; }
+    .slide-num { display: none; }
+
+    /* COVER */
+    .slide-cover {
+      padding: 80px 28px 120px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .cover-title { font-size: 56px; }
+    .cover-subtitle { font-size: 18px; margin-bottom: 32px; }
+    .cover-meta { flex-direction: column; gap: 20px; }
+    .cover-session { margin-bottom: 20px; }
+
+    /* DIVIDER */
+    .divider-number { font-size: 40vw; }
+    .divider-title { font-size: 28px; padding: 0 20px; }
+
+    /* CONTENT — stack vertically */
+    .slide-content {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .content-left {
+      padding: 80px 28px 32px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-right {
+      padding: 28px 28px 120px;
+    }
+    .slide-title { font-size: 32px; }
+    .slide-body { font-size: 17px; }
+    .point-text { font-size: 17px; }
+    .points { gap: 16px; }
+
+    /* HIGHLIGHT */
+    .slide-highlight { padding: 80px 24px 120px; }
+    .highlight-quote { font-size: 26px; }
+    .highlight-bg { font-size: 50vw; }
+
+    /* SETTINGS — 2 col on mobile */
+    .slide-settings {
+      padding: 80px 16px 120px;
+      justify-content: flex-start;
+      min-height: 100vh;
+      height: auto;
+    }
+    .settings-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 24px;
+    }
+    .setting-card { padding: 20px 16px; }
+    .setting-value { font-size: 24px; }
+    .setting-desc { font-size: 13px; }
+    .slide-settings .slide-title { font-size: 28px; }
+
+    /* EXERCISE — stack vertically */
+    .slide-exercise {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .exercise-left {
+      padding: 80px 28px 32px;
+    }
+    .exercise-right {
+      padding: 28px 28px 120px;
+    }
+    .exercise-steps { gap: 20px; }
+    .step-text { font-size: 16px; }
+
+    /* RECAP — stack vertically */
+    .slide-recap {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .recap-left {
+      padding: 80px 28px 28px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .recap-right {
+      padding: 28px 28px 120px;
+    }
+    .recap-item { padding: 14px 16px; }
+    .recap-text { font-size: 15px; }
+    .recap-items { gap: 10px; }
+  }
+  .nav-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px; background: var(--accent);
+    transition: width 0.6s ease;
+    z-index: 100;
+  }
+
+  /* SESSION LABEL */
+  .session-label {
+    position: fixed; top: 36px; left: 50px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    z-index: 100;
+  }
+
+  /* SLIDE NUMBER */
+  .slide-num {
+    position: fixed; bottom: 48px; left: 50px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--border);
+    z-index: 100;
+  }
+
+  /* ========================
+     SLIDE LAYOUTS
+  ======================== */
+
+  /* COVER */
+  .slide-cover {
+    background: var(--black);
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 10vw;
+  }
+  .slide-cover .bg-line {
+    position: absolute;
+    top: 0; right: 0;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--border) 30%, var(--border) 70%, transparent);
+  }
+  .slide-cover .bg-line-2 {
+    position: absolute;
+    top: 0; right: 30vw;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--border) 20%, transparent);
+    opacity: 0.4;
+  }
+  .cover-session {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 1s ease forwards;
+  }
+  .cover-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 0.9;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+  .cover-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 60px;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+  .cover-meta {
+    display: flex; gap: 48px;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .cover-meta-item {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cover-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .cover-meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .cover-accent-line {
+    position: absolute;
+    bottom: 0; left: 10vw;
+    width: 120px; height: 2px;
+    background: var(--accent);
+    animation: expandLine 1.2s 0.8s ease both;
+  }
+
+  /* SECTION DIVIDER */
+  .slide-divider {
+    background: var(--dark);
+    justify-content: center;
+    align-items: center;
+  }
+  .divider-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 20vw, 220px);
+    color: var(--border);
+    position: absolute;
+    line-height: 1;
+    user-select: none;
+  }
+  .divider-content {
+    position: relative; z-index: 2;
+    text-align: center;
+  }
+  .divider-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .divider-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 300;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+  .divider-time {
+    margin-top: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+
+  /* CONTENT SLIDE — TEXT HEAVY */
+  .slide-content {
+    background: var(--black);
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .content-left {
+    padding: 80px 60px 80px 10vw;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+  .content-right {
+    padding: 80px 10vw 80px 60px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .slide-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .slide-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  .slide-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .slide-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 1.4vw, 20px);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .slide-body strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* POINTS LIST */
+  .points {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .points li {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .point-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    min-width: 20px;
+    margin-top: 4px;
+  }
+  .point-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 1.4vw, 20px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .point-text span {
+    display: block;
+    font-size: 0.85em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* HIGHLIGHT SLIDE */
+  .slide-highlight {
+    background: var(--dark);
+    justify-content: center;
+    align-items: center;
+    padding: 0 12vw;
+    text-align: center;
+  }
+  .highlight-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 60px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--white);
+    position: relative;
+    z-index: 2;
+  }
+  .highlight-quote em { font-style: italic; color: var(--accent); }
+  .highlight-source {
+    margin-top: 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+  .highlight-bg {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30vw;
+    color: var(--border);
+    opacity: 0.15;
+    user-select: none;
+    line-height: 1;
+  }
+
+  /* FULL IMAGE SLIDE */
+  .slide-visual {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 55% 45%;
+  }
+  .visual-image {
+    position: relative;
+    overflow: hidden;
+    background: var(--mid);
+  }
+  .visual-image-inner {
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.7) contrast(1.1);
+    transition: transform 8s ease;
+  }
+  .slide.active .visual-image-inner { transform: scale(1.03); }
+  .visual-image::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 70%, var(--black));
+  }
+  .visual-content {
+    padding: 80px 10vw 80px 60px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+
+  /* SETTINGS SLIDE */
+  .slide-settings {
+    background: var(--black);
+    padding: 0 10vw;
+    justify-content: center;
+  }
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 40px;
+  }
+  .setting-card {
+    background: var(--dark);
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .setting-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .setting-card:hover::before { transform: scaleX(1); }
+  .setting-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .setting-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .setting-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* EXERCISE SLIDE */
+  .slide-exercise {
+    background: var(--mid);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .exercise-left {
+    padding: 80px 60px 80px 10vw;
+    background: var(--accent);
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .exercise-left .slide-tag { color: var(--black); opacity: 0.6; }
+  .exercise-left .slide-title { color: var(--black); }
+  .exercise-left .slide-body { color: rgba(0,0,0,0.6); }
+  .exercise-right {
+    padding: 80px 10vw 80px 60px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .exercise-steps {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .exercise-steps li {
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .step-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 1.3vw, 19px);
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.5;
+    padding-top: 6px;
+  }
+
+  /* RECAP SLIDE */
+  .slide-recap {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 40% 60%;
+  }
+  .recap-left {
+    padding: 80px 60px 80px 10vw;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+  .recap-right {
+    padding: 80px 10vw 80px 60px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .recap-items {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .recap-item {
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    display: flex; gap: 16px; align-items: center;
+    transition: border-color 0.3s;
+  }
+  .recap-item:hover { border-color: var(--accent); }
+  .recap-check {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+  }
+  .recap-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 1.3vw, 18px);
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes expandLine {
+    from { transform: scaleX(0); transform-origin: left; }
+    to { transform: scaleX(1); }
+  }
+
+  .slide.active .content-left,
+  .slide.active .content-right,
+  .slide.active .visual-content,
+  .slide.active .exercise-left,
+  .slide.active .exercise-right,
+  .slide.active .recap-left,
+  .slide.active .recap-right {
+    animation: fadeUp 0.8s ease both;
+  }
+  .slide.active .content-right,
+  .slide.active .visual-content,
+  .slide.active .exercise-right,
+  .slide.active .recap-right {
+    animation-delay: 0.15s;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="session-label">Sessione 01 — Fondamenta e Ripresa Consapevole</div>
+<div class="slide-num" id="slideNum">01</div>
+
+<div class="slides-wrapper" id="slides">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover active" data-index="0">
+    <div class="bg-line"></div>
+    <div class="bg-line-2"></div>
+    <div class="cover-session">Sessione 01 / 03</div>
+    <div class="cover-title">FONDAMENTA<br>E RIPRESA</div>
+    <div class="cover-subtitle">Capire prima di girare</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Durata</div>
+        <div class="cover-meta-value">3 ore</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Blocchi</div>
+        <div class="cover-meta-value">3 moduli</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Software</div>
+        <div class="cover-meta-value">DaVinci Resolve</div>
+      </div>
+    </div>
+    <div class="cover-accent-line"></div>
+  </div>
+
+  <!-- SLIDE 2: DIVIDER — Blocco 1 -->
+  <div class="slide slide-divider" data-index="1">
+    <div class="divider-number">01</div>
+    <div class="divider-content">
+      <div class="divider-label">Blocco 01</div>
+      <div class="divider-title">Linguaggio del Video Social</div>
+      <div class="divider-time">45 minuti</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Come funziona l'attenzione -->
+  <div class="slide slide-content" data-index="2">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 01 — Attenzione</div>
+      <div class="slide-title">Il problema non è<br><em>fare il video.</em><br>È farsi guardare.</div>
+      <div class="slide-body">
+        Sui social hai <strong>meno di 2 secondi</strong> per catturare l'attenzione prima che il pollice scorra via. Tutto il resto — la qualità delle immagini, il montaggio, il messaggio — viene dopo.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">—</span>
+          <div class="point-text">Il cervello elabora le immagini in <strong>13 millisecondi</strong><span>Prima ancora che tu abbia letto una parola</span></div>
+        </li>
+        <li>
+          <span class="point-num">—</span>
+          <div class="point-text">Il tempo medio di visione di un Reel è <strong>sotto i 7 secondi</strong><span>Se non succede niente subito, addio</span></div>
+        </li>
+        <li>
+          <span class="point-num">—</span>
+          <div class="point-text">L'algoritmo premia il <strong>tempo di visione</strong>, non i like<span>Un video guardato fino in fondo vale molto di più</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Vertical vs Horizontal -->
+  <div class="slide slide-content" data-index="3">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 01 — Formato</div>
+      <div class="slide-title">Vertical<br>non è<br><em>orizzontale tagliato.</em></div>
+      <div class="slide-body">
+        Pensare in verticale significa riprogettare la composizione, il ritmo, e la relazione con lo spettatore. Non è un formato — è un linguaggio diverso.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">9:16</span>
+          <div class="point-text"><strong>Instagram Reels / TikTok / YouTube Shorts</strong><span>Il soggetto occupa tutta l'altezza. Zero spazio sprecato.</span></div>
+        </li>
+        <li>
+          <span class="point-num">1:1</span>
+          <div class="point-text"><strong>Feed Instagram / Facebook</strong><span>Quadrato: bilanciato, fermo. Buono per immagini statiche e prodotti.</span></div>
+        </li>
+        <li>
+          <span class="point-num">16:9</span>
+          <div class="point-text"><strong>YouTube / LinkedIn</strong><span>Cinema orizzontale. Vale quando il contenuto è lungo e informativo.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Anatomia di un video -->
+  <div class="slide slide-content" data-index="4">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 01 — Struttura</div>
+      <div class="slide-title">Ogni video<br>che funziona<br><em>ha una forma.</em></div>
+      <div class="slide-body">
+        Non importa se dura 15 secondi o 3 minuti. La struttura è sempre la stessa. Imparala a memoria — diventerà istintiva.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">01</span>
+          <div class="point-text"><strong>HOOK</strong> — I primi 1-2 secondi<span>Una domanda, un'immagine forte, un'affermazione inaspettata. Deve fermare il pollice.</span></div>
+        </li>
+        <li>
+          <span class="point-num">02</span>
+          <div class="point-text"><strong>SVILUPPO</strong> — Il corpo del video<span>Mantieni la promessa fatta nell'hook. Vai dritto al punto.</span></div>
+        </li>
+        <li>
+          <span class="point-num">03</span>
+          <div class="point-text"><strong>CTA</strong> — La chiusura<span>Cosa vuoi che faccia chi guarda? Salva, condividi, commenta, vai al link.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: HIGHLIGHT -->
+  <div class="slide slide-highlight" data-index="5">
+    <div class="highlight-bg">HOOK</div>
+    <div class="highlight-quote">
+      "Se il tuo video non ha un hook,<br>non hai un video.<br><em>Hai un contenuto per te.</em>"
+    </div>
+    <div class="highlight-source">— Principio fondamentale del video social</div>
+  </div>
+
+  <!-- SLIDE 7: DIVIDER — Blocco 2 -->
+  <div class="slide slide-divider" data-index="6">
+    <div class="divider-number">02</div>
+    <div class="divider-content">
+      <div class="divider-label">Blocco 02</div>
+      <div class="divider-title">L'Osmo Pocket usato bene</div>
+      <div class="divider-time">1 ora 15 minuti</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Impostazioni Osmo Pocket -->
+  <div class="slide slide-settings" data-index="7">
+    <div class="slide-tag">Blocco 02 — Impostazioni</div>
+    <div class="slide-title">Le impostazioni<br><em>che cambiano tutto</em></div>
+    <div class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-label">Risoluzione</div>
+        <div class="setting-value">4K sempre</div>
+        <div class="setting-desc">Gira sempre in 4K. In post hai margine per ritagliare, stabilizzare e riformattare senza perdere qualità. Esporti in 1080p per i social.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Frame Rate</div>
+        <div class="setting-value">25 / 50fps</div>
+        <div class="setting-desc">25fps per look cinematografico. 50fps se vuoi rallentare il footage in post. Mai 60fps per social europei.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Colore</div>
+        <div class="setting-value">D-Log / Normal</div>
+        <div class="setting-desc">D-Log M se fai color grading. Normal se non vuoi pensarci. Mai mischiare i due nello stesso progetto.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Stabilizzazione</div>
+        <div class="setting-value">RockSteady</div>
+        <div class="setting-desc">Sempre attiva per social. Riduci il crop digitale in DaVinci se devi usare tutto il frame.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Orientamento</div>
+        <div class="setting-value">Portrait</div>
+        <div class="setting-desc">Per Reels e Stories attiva la modalità ritratto. Non girare orizzontale e tagliare dopo — si vede.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Esposizione</div>
+        <div class="setting-value">Manuale</div>
+        <div class="setting-desc">Impara a usare l'esposizione manuale. L'auto cambia mentre riprendi — rovina il footage.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: La luce -->
+  <div class="slide slide-content" data-index="8">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 02 — Luce</div>
+      <div class="slide-title">La luce<br>è il 70%<br><em>della qualità.</em></div>
+      <div class="slide-body">
+        Puoi avere la camera più costosa del mondo, ma con una luce sbagliata il risultato è mediocre. Viceversa, con buona luce anche uno smartphone fa lavori straordinari.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Luce naturale</strong> — la migliore e la gratuita<span>Finestra di lato, mai controluce. L'ora d'oro vale tutto.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Luce morbida</strong> — diffusa, non diretta<span>Un foglio bianco tra la lampada e il soggetto fa miracoli.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Temperatura colore</strong> — coerenza prima di tutto<span>Non mischiare luce calda e fredda nello stesso piano.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Occhi sempre aperti</strong> — leggi la luce prima di girare<span>5 minuti a osservare l'ambiente valgono 30 minuti in post.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Audio -->
+  <div class="slide slide-highlight" data-index="9">
+    <div class="highlight-bg">AUDIO</div>
+    <div class="highlight-quote">
+      Lo spettatore <em>perdona</em> un'immagine imperfetta.<br>Non perdona mai<br>un audio cattivo.
+    </div>
+    <div class="highlight-source">— Regola non scritta del video professionale</div>
+  </div>
+
+  <!-- SLIDE 11: Audio soluzioni -->
+  <div class="slide slide-content" data-index="10">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 02 — Audio</div>
+      <div class="slide-title">L'audio<br><em>si risolve</em><br>prima di girare.</div>
+      <div class="slide-body">
+        Il microfono dell'Osmo Pocket è decente, ma non per ambienti rumorosi o interviste. Conosci le tue opzioni e scegli in base al contesto.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">01</span>
+          <div class="point-text"><strong>Microfono integrato</strong><span>Ok per ambienti tranquilli, b-roll, footage senza voce.</span></div>
+        </li>
+        <li>
+          <span class="point-num">02</span>
+          <div class="point-text"><strong>Lavalier wireless</strong> (Rode, DJI Mic)<span>Indispensabile per interviste e talking head. Cambia tutto.</span></div>
+        </li>
+        <li>
+          <span class="point-num">03</span>
+          <div class="point-text"><strong>Registrazione separata</strong><span>Smartphone vicino al soggetto + sync in post. Soluzione di emergenza efficace.</span></div>
+        </li>
+        <li>
+          <span class="point-num">04</span>
+          <div class="point-text"><strong>Ambiente silenzioso</strong><span>La soluzione più sottovalutata. Scegli bene dove girare.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: ESERCIZIO PRATICO 1 -->
+  <div class="slide slide-exercise" data-index="11">
+    <div class="exercise-left">
+      <div class="slide-tag">Esercizio Pratico</div>
+      <div class="slide-title">Giriamo<br>3 clip.</div>
+      <div class="slide-body">
+        Mettiamo subito in pratica luce, inquadratura e audio. Stesso soggetto, tre approcci diversi.
+      </div>
+    </div>
+    <div class="exercise-right">
+      <ul class="exercise-steps">
+        <li>
+          <div class="step-num">01</div>
+          <div class="step-text">Imposta l'Osmo Pocket con le impostazioni corrette per social (1080p / 25fps / Portrait)</div>
+        </li>
+        <li>
+          <div class="step-num">02</div>
+          <div class="step-text">Gira una clip con luce naturale laterale — soggetto a tua scelta</div>
+        </li>
+        <li>
+          <div class="step-num">03</div>
+          <div class="step-text">Gira la stessa clip con luce artificiale o controluce — osserva la differenza</div>
+        </li>
+        <li>
+          <div class="step-num">04</div>
+          <div class="step-text">Registra una battuta di voce: con mic integrato e con lavalier — confronta in cuffia</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: DIVIDER — Blocco 3 -->
+  <div class="slide slide-divider" data-index="12">
+    <div class="divider-number">03</div>
+    <div class="divider-content">
+      <div class="divider-label">Blocco 03</div>
+      <div class="divider-title">DaVinci: Metodo e Organizzazione</div>
+      <div class="divider-time">1 ora</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Setup DaVinci -->
+  <div class="slide slide-content" data-index="13">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 03 — DaVinci</div>
+      <div class="slide-title">Il progetto<br>impostato male<br><em>costa ore.</em></div>
+      <div class="slide-body">
+        Prima di importare un singolo file, il progetto deve essere configurato correttamente. È la base su cui costruisce tutto il resto — timeline, export, color.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Risoluzione timeline</strong> — 1080×1920 per vertical<span>Non 1920×1080. L'orientamento va impostato qui, non in export.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Frame rate</strong> — 25fps (Europa)<span>Deve corrispondere al footage. Se mischi, DaVinci interpola e il risultato è gommoso.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Color science</strong> — ACES<span>ACES è lo standard professionale usato anche in post produzione cinematografica. Gamma di colore amplissima, perfetto se fai grading serio. Impostalo subito, non cambiarlo a metà progetto.</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Ottimizzazione proxy</strong> — attivala se il pc fatica<span>Gira in proxy durante il montaggio, esporti sempre dall'originale.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: Organizzazione bin -->
+  <div class="slide slide-content" data-index="14">
+    <div class="content-left">
+      <div class="slide-tag">Blocco 03 — Organizzazione</div>
+      <div class="slide-title">Un progetto<br>ordinato è un<br><em>progetto veloce.</em></div>
+      <div class="slide-body">
+        La struttura dei bin in DaVinci è il tuo sistema nervoso. Chi lavora in agenzia deve essere in grado di riaprire un progetto dopo settimane e trovare tutto immediatamente.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">📁</span>
+          <div class="point-text"><strong>01_FOOTAGE</strong><span>Tutto il materiale grezzo. Sottocartelle per giorno o location se necessario.</span></div>
+        </li>
+        <li>
+          <span class="point-num">📁</span>
+          <div class="point-text"><strong>02_AUDIO</strong><span>Musica, voice over, effetti sonori separati.</span></div>
+        </li>
+        <li>
+          <span class="point-num">📁</span>
+          <div class="point-text"><strong>03_GRAFICHE</strong><span>Loghi, testi, motion graphics, LUT.</span></div>
+        </li>
+        <li>
+          <span class="point-num">📁</span>
+          <div class="point-text"><strong>04_TIMELINE</strong><span>Le versioni della timeline. Usa nomi descrittivi: v01_bozza, v02_review, v03_final.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: Pagine DaVinci -->
+  <div class="slide slide-settings" data-index="15">
+    <div class="slide-tag">Blocco 03 — DaVinci</div>
+    <div class="slide-title">Le pagine di <em>DaVinci</em></div>
+    <div class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-label">Pagina EDIT</div>
+        <div class="setting-value">Montaggio</div>
+        <div class="setting-desc">La casa base. Timeline classica, inspector, keyframe, audio. Qui si fa tutto — tagli, testi, transizioni, sync musica. È la pagina che usi di più.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Pagina COLOR</div>
+        <div class="setting-value">Grading</div>
+        <div class="setting-desc">Il cuore di DaVinci e il suo vero punto di forza. Nodi, curve, qualificatori, LUT. La affrontiamo nella sessione 3 — è un mondo a sé.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Pagina FAIRLIGHT</div>
+        <div class="setting-value">Audio</div>
+        <div class="setting-desc">Mix audio professionale. Per social bastano le correzioni base direttamente in Edit — equalizzatore, volume automation, noise reduction.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Pagina DELIVER</div>
+        <div class="setting-value">Export</div>
+        <div class="setting-desc">Render finale. Preset per Instagram, TikTok, YouTube Shorts. La configuriamo bene nella sessione 2 — una volta fatto non ci si pensa più.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Pagina MEDIA</div>
+        <div class="setting-value">Import</div>
+        <div class="setting-desc">Il punto di ingresso del materiale. Qui importi, organizzi i clip nei bin e verifichi le proprietà del footage prima di montare.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">Regola d'oro</div>
+        <div class="setting-value">Edit first</div>
+        <div class="setting-desc">Monta tutto in Edit. Poi vai in Color. Poi Deliver. Questo ordine non si cambia — ogni pagina ha il suo momento nel workflow.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: ESERCIZIO PRATICO 2 -->
+  <div class="slide slide-exercise" data-index="16">
+    <div class="exercise-left">
+      <div class="slide-tag">Esercizio Pratico</div>
+      <div class="slide-title">Setup<br>progetto<br>da zero.</div>
+      <div class="slide-body">
+        Creiamo insieme il template di progetto che useremo per tutti i lavori social in agenzia.
+      </div>
+    </div>
+    <div class="exercise-right">
+      <ul class="exercise-steps">
+        <li>
+          <div class="step-num">01</div>
+          <div class="step-text">Crea un nuovo progetto in DaVinci — imposta 1080×1920 / 25fps</div>
+        </li>
+        <li>
+          <div class="step-num">02</div>
+          <div class="step-text">Crea la struttura bin: 01_Footage / 02_Audio / 03_Grafiche / 04_Timeline</div>
+        </li>
+        <li>
+          <div class="step-num">03</div>
+          <div class="step-text">Importa le clip girate nell'esercizio precedente nella cartella corretta</div>
+        </li>
+        <li>
+          <div class="step-num">04</div>
+          <div class="step-text">Esporta il progetto come template DaVinci — ogni nuovo lavoro partirà già con bin, impostazioni e preset corretti. Zero setup da rifare.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: ANALISI VIDEO -->
+  <div class="slide slide-content" data-index="17">
+    <div class="content-left">
+      <div class="slide-tag">Analisi — Hook in azione</div>
+      <div class="slide-title">Due video.<br><em>Due mondi.</em><br>Stesso principio.</div>
+      <div class="slide-body">
+        Apriamo questi due video insieme e li smontano pezzo per pezzo. Identifichiamo hook, struttura e CTA — poi capiamo perché uno funziona diversamente dall'altro.
+      </div>
+    </div>
+    <div class="content-right">
+      <ul class="points">
+        <li>
+          <span class="point-num">01</span>
+          <div class="point-text"><strong>Creator — Khaby Lame</strong><span>Hook puramente visivo, zero parole. Il primo frame è già il contenuto. Analisi: cosa ferma lo scroll senza dire nulla?<br><br>🔗 instagram.com/khaby.lame</span></div>
+        </li>
+        <li>
+          <span class="point-num">02</span>
+          <div class="point-text"><strong>Brand — Apple "Shot on iPhone"</strong><span>Hook aspirazionale. Nessun prodotto nei primi secondi — solo emozione. Analisi: come un brand costruisce desiderio senza vendere.<br><br>🔗 youtube.com/@Apple</span></div>
+        </li>
+        <li>
+          <span class="point-num">→</span>
+          <div class="point-text"><strong>Domanda guida</strong><span>In quale dei due modelli riconosciamo il lavoro che faremo in agenzia? E cosa possiamo prendere da entrambi?</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 19: RECAP SESSIONE 1 -->
+  <div class="slide slide-recap" data-index="18">
+    <div class="recap-left">
+      <div class="slide-tag">Fine Sessione 01</div>
+      <div class="slide-title">Quello che<br>hai imparato<br><em>oggi.</em></div>
+      <div class="slide-body" style="margin-top: 24px;">
+        Nella prossima sessione entriamo nel vivo del montaggio social e dell'export professionale.
+      </div>
+    </div>
+    <div class="recap-right">
+      <div class="recap-items">
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Come funziona l'attenzione sui social e la struttura Hook / Sviluppo / CTA</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Le impostazioni corrette dell'Osmo Pocket per contenuti social</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Come leggere la luce e scegliere l'audio giusto per ogni situazione</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Setup corretto di DaVinci Resolve: risoluzione, fps, color science</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Struttura bin professionale e template di progetto riutilizzabile</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-check">✓</div>
+          <div class="recap-text">Panoramica delle pagine di DaVinci e il loro ruolo nel workflow</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end slides-wrapper -->
+
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
+  <div class="nav-counter" id="navCounter">01 / 18</div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function changeSlide(dir) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    slides[current].classList.add('active');
+    updateUI();
+  }
+
+  function updateUI() {
+    const n = String(current + 1).padStart(2, '0');
+    const t = String(total).padStart(2, '0');
+    document.getElementById('navCounter').textContent = n + ' / ' + t;
+    document.getElementById('slideNum').textContent = n;
+    document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+    document.getElementById('prevBtn').style.opacity = current === 0 ? '0.2' : '1';
+    document.getElementById('nextBtn').style.opacity = current === total - 1 ? '0.2' : '1';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  // Touch / swipe support
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (dx > dy && dx > 10) isSwiping = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (!isSwiping) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      changeSlide(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+
+  updateUI();
+</script>
+</body>
+</html>
