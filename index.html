@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -28,6 +29,11 @@
     overflow: hidden;
   }
 
+  /* MOBILE: allow scroll within slide */
+  @media (max-width: 768px) {
+    html, body { overflow: hidden; }
+  }
+
   /* GRAIN OVERLAY */
   body::before {
     content: '';
@@ -47,6 +53,8 @@
     display: flex; flex-direction: column;
     opacity: 0; pointer-events: none;
     transition: opacity 0.7s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .slide.active {
     opacity: 1; pointer-events: all;
@@ -71,13 +79,115 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
-  @media (max-width: 768px) {
-    .nav { bottom: 24px; right: 24px; gap: 14px; }
-    .nav-btn { width: 52px; height: 52px; }
-    .session-label { top: 20px; left: 20px; font-size: 9px; }
-    .slide-num { bottom: 32px; left: 20px; }
-  }
   .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ========================
+     MOBILE RESPONSIVE
+  ======================== */
+  @media (max-width: 768px) {
+
+    /* NAV — bottom center, above content */
+    .nav {
+      bottom: 16px; right: 50%;
+      transform: translateX(50%);
+      gap: 16px;
+      background: rgba(8,8,8,0.9);
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+    }
+    .nav-btn { width: 48px; height: 48px; font-size: 18px; }
+    .session-label { display: none; }
+    .slide-num { display: none; }
+
+    /* COVER */
+    .slide-cover {
+      padding: 80px 28px 120px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .cover-title { font-size: 56px; }
+    .cover-subtitle { font-size: 18px; margin-bottom: 32px; }
+    .cover-meta { flex-direction: column; gap: 20px; }
+    .cover-session { margin-bottom: 20px; }
+
+    /* DIVIDER */
+    .divider-number { font-size: 40vw; }
+    .divider-title { font-size: 28px; padding: 0 20px; }
+
+    /* CONTENT — stack vertically */
+    .slide-content {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .content-left {
+      padding: 80px 28px 32px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-right {
+      padding: 28px 28px 120px;
+    }
+    .slide-title { font-size: 32px; }
+    .slide-body { font-size: 17px; }
+    .point-text { font-size: 17px; }
+    .points { gap: 16px; }
+
+    /* HIGHLIGHT */
+    .slide-highlight { padding: 80px 24px 120px; }
+    .highlight-quote { font-size: 26px; }
+    .highlight-bg { font-size: 50vw; }
+
+    /* SETTINGS — 2 col on mobile */
+    .slide-settings {
+      padding: 80px 16px 120px;
+      justify-content: flex-start;
+      min-height: 100vh;
+      height: auto;
+    }
+    .settings-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 24px;
+    }
+    .setting-card { padding: 20px 16px; }
+    .setting-value { font-size: 24px; }
+    .setting-desc { font-size: 13px; }
+    .slide-settings .slide-title { font-size: 28px; }
+
+    /* EXERCISE — stack vertically */
+    .slide-exercise {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .exercise-left {
+      padding: 80px 28px 32px;
+    }
+    .exercise-right {
+      padding: 28px 28px 120px;
+    }
+    .exercise-steps { gap: 20px; }
+    .step-text { font-size: 16px; }
+
+    /* RECAP — stack vertically */
+    .slide-recap {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+    .recap-left {
+      padding: 80px 28px 28px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .recap-right {
+      padding: 28px 28px 120px;
+    }
+    .recap-item { padding: 14px 16px; }
+    .recap-text { font-size: 15px; }
+    .recap-items { gap: 10px; }
+  }
   .nav-counter {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -1070,14 +1180,25 @@
   // Touch / swipe support
   let touchStartX = 0;
   let touchStartY = 0;
+  let isSwiping = false;
+
   document.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+    isSwiping = false;
   }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (dx > dy && dx > 10) isSwiping = true;
+  }, { passive: true });
+
   document.addEventListener('touchend', (e) => {
+    if (!isSwiping) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
       changeSlide(dx < 0 ? 1 : -1);
     }
   }, { passive: true });
